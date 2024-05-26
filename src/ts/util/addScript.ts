@@ -21,6 +21,10 @@ export const addScript = (path: string, id: string) => {
             resolve();
             return false;
         }
+        let requirejs = (window as any)["requirejs"];
+        if(requirejs){
+            (window as any)["requirejs"] = undefined;
+        }
         const scriptElement = document.createElement("script");
         scriptElement.src = path;
         scriptElement.async = true;
@@ -33,6 +37,7 @@ export const addScript = (path: string, id: string) => {
             if (document.getElementById(id)) {
                 // 循环调用需清除 DOM 中的 script 标签
                 scriptElement.remove();
+                (window as any)["requirejs"] = requirejs;
                 resolve();
                 return false;
             }
